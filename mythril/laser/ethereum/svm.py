@@ -3,7 +3,6 @@ import logging
 from collections import defaultdict
 from copy import copy
 from datetime import datetime, timedelta
-import random
 from typing import Callable, Dict, DefaultDict, List, Tuple, Optional
 
 from mythril.support.opcodes import OPCODES
@@ -30,6 +29,7 @@ from mythril.laser.ethereum.transaction import (
 )
 from mythril.laser.smt import And, symbol_factory, simplify
 from mythril.support.support_args import args
+import secrets
 
 log = logging.getLogger(__name__)
 
@@ -349,7 +349,7 @@ class LaserEVM:
                 continue
 
             if self.strategy.run_check() and (
-                len(new_states) > 1 and random.uniform(0, 1) < args.pruning_factor
+                len(new_states) > 1 and secrets.SystemRandom().uniform(0, 1) < args.pruning_factor
             ):
                 new_states = [
                     state

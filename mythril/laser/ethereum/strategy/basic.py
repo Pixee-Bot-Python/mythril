@@ -1,10 +1,9 @@
 """This module implements basic symbolic execution search strategies."""
-from random import randrange
 from typing import List
 
 from mythril.laser.ethereum.state.global_state import GlobalState
 from . import BasicSearchStrategy
-from random import choices
+import secrets
 
 
 class DepthFirstSearchStrategy(BasicSearchStrategy):
@@ -63,7 +62,7 @@ class ReturnRandomNaivelyStrategy(BasicSearchStrategy):
         """
         if len(self.work_list) > 0:
             if self.previous_random_value == -1:
-                return self.work_list.pop(randrange(len(self.work_list)))
+                return self.work_list.pop(secrets.SystemRandom().randrange(len(self.work_list)))
             else:
                 new_state = self.work_list.pop(self.previous_random_value)
                 self.previous_random_value = -1
@@ -77,7 +76,7 @@ class ReturnRandomNaivelyStrategy(BasicSearchStrategy):
         :return:
         """
         if len(self.work_list) > 0:
-            self.previous_random_value = randrange(len(self.work_list))
+            self.previous_random_value = secrets.SystemRandom().randrange(len(self.work_list))
             return self.work_list[self.previous_random_value]
         else:
             raise IndexError
@@ -105,7 +104,7 @@ class ReturnWeightedRandomStrategy(BasicSearchStrategy):
             return ns
         else:
             return self.work_list.pop(
-                choices(range(len(self.work_list)), probability_distribution)[0]
+                secrets.SystemRandom().choices(range(len(self.work_list)), probability_distribution)[0]
             )
 
     def view_strategic_global_state(self) -> GlobalState:
@@ -116,7 +115,6 @@ class ReturnWeightedRandomStrategy(BasicSearchStrategy):
         probability_distribution = [
             1 / (global_state.mstate.depth + 1) for global_state in self.work_list
         ]
-        self.previous_random_value = choices(
-            range(len(self.work_list)), probability_distribution
+        self.previous_random_value = secrets.SystemRandom().choices(range(len(self.work_list)), probability_distribution
         )[0]
         return self.work_list[self.previous_random_value]

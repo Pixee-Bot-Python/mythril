@@ -1,6 +1,5 @@
 """This module contains a representation of the EVM's world state."""
 from copy import copy, deepcopy
-from random import randint
 from typing import Dict, List, Iterator, Optional, TYPE_CHECKING
 from eth._utils.address import generate_contract_address
 from mythril.laser.ethereum.state.transient_storage import TransientStorage
@@ -11,6 +10,7 @@ from mythril.laser.ethereum.state.account import Account
 from mythril.laser.ethereum.state.annotation import StateAnnotation
 from mythril.laser.ethereum.state.constraints import Constraints
 from mythril.laser.ethereum.state.transient_storage import TransientStorage
+import secrets
 
 if TYPE_CHECKING:
     from mythril.laser.ethereum.cfg import Node
@@ -245,7 +245,7 @@ class WorldState:
             address = "0x" + str(generate_contract_address(creator, nonce).hex())
             return symbol_factory.BitVecVal(int(address, 16), 256)
         while True:
-            address = "0x" + "".join([str(hex(randint(0, 16)))[-1] for _ in range(40)])
+            address = "0x" + "".join([str(hex(secrets.SystemRandom().randint(0, 16)))[-1] for _ in range(40)])
             if address not in self._accounts.keys():
                 return symbol_factory.BitVecVal(int(address, 16), 256)
 
