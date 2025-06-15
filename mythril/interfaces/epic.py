@@ -12,11 +12,11 @@
 import atexit
 import math
 import os
-import random
 import re
 import sys
 import time
 import argparse
+import secrets
 
 PY3 = sys.version_info >= (3,)
 
@@ -265,7 +265,7 @@ def run():
     )
 
     options = parser.parse_args()
-    options.os = random.randint(0, 256) if options.seed == 0 else options.seed
+    options.os = secrets.SystemRandom().randint(0, 256) if options.seed == 0 else options.seed
     options.mode = options.mode or detect_mode()
 
     lolcat = LolCat(mode=options.mode)
