@@ -28,6 +28,7 @@ from mythril.solidity.soliditycontract import (
     get_contracts_from_foundry,
 )
 from mythril.support.support_args import args
+from security import safe_command
 
 
 def format_warning(message, category, filename, lineno, line=""):
@@ -173,8 +174,7 @@ class MythrilDisassembler:
 
         cmd = ["forge", "build", "--build-info", "--force"]
 
-        with subprocess.Popen(
-            cmd,
+        with safe_command.run(subprocess.Popen, cmd,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             cwd=project_root,

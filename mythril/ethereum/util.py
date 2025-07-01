@@ -24,6 +24,7 @@ from mythril.exceptions import CompilerError
 from mythril.support.support_args import args
 
 import solcx
+from security import safe_command
 
 log = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ def get_solc_json(file, solc_binary="solc", solc_settings_json=None):
     )
 
     try:
-        p = Popen(cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        p = safe_command.run(Popen, cmd, stdin=PIPE, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate(bytes(input_json, "utf8"))
 
     except FileNotFoundError:
